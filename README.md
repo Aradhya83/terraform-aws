@@ -39,6 +39,7 @@ A three-tier AWS network built with Terraform modules: a VPC with public and pri
 | Private route table | Local traffic only |
 | S3 gateway endpoint | Free private access to S3 from private subnets |
 | `web`, `app`, `db` security groups | Tiered access: internet → web → app → db |
+| EC2 test instance (optional) | Checks the public path end to end |
 
 
 ## Prerequisites
@@ -58,13 +59,14 @@ Show the outputs:
 ```bash
 terraform output
 ```
-
+### Test the public path (optional)
+Set `create_test_instance = true` in `terraform.tfvars` and apply again. The instance runs a tiny web server in a public subnet. Open the `test_url` output in a browser (or `curl` it). Because the web security group allows port 80, you should see the test page. The app and db security groups only accept traffic from the tier in front of them, so they are not reachable from the internet.
 
 ### Clean up
 ```bash
 terraform destroy
 ```
-After destroying, check the VPC consoles for leftover resources.
+After destroying, check the VPC and EC2 consoles for leftover resources.
 
 ## Project structure
 ```
@@ -75,8 +77,10 @@ aws-vpc-terraform/
 ├── outputs.tf               # Output values
 ├── terraform.tfvars.example # Example variable values
 ├── modules/
-    ├── vpc/                 # VPC, subnets, gateway, route tables, S3 endpoint
-    └── security_groups/     # web, app and db security groups
+│   ├── vpc/                 # VPC, subnets, gateway, route tables, S3 endpoint
+│   └── security_groups/     # web, app and db security groups
+└── .github/workflows/
+    └── terraform.yml        # fmt, init and validate on every push
 ```
 
 ## Variables
@@ -91,6 +95,8 @@ aws-vpc-terraform/
 | `private_subnet_cidrs` | `["10.0.11.0/24", "10.0.12.0/24"]` | One CIDR per AZ |
 | `app_port` | `8080` | App tier port |
 | `db_port` | `5432` | Database tier port |
+| `create_test_instance` | `false` | Create the optional EC2 test instance |
+| `test_instance_type` | `t3.micro` | Test instance type |
 
 The number of entries in each subnet CIDR list must match `az_count`.
 
