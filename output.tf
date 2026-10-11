@@ -27,3 +27,13 @@ output "db_sg_id" {
   description = "ID of db security group"
   value       = module.security_groups.db_sg_id
 }
+
+output "test_instance_public_ip" {
+  description = "public IP of the test instance (null if not created)"
+  value       = try(aws_instance.test[0].public_ip, null)
+}
+
+output "test_url" {
+  description = "URL to check the test instance (null if not created)"
+  value       = try("http://${aws_instance.test[0].public_ip}", null)
+}

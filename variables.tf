@@ -52,4 +52,15 @@ variable "az_count" {
   default     = 2
 }
 
+variable "create_test_instance" {
+  type        = bool
+  description = "create a small EC2 instance in a public subnet to test connectivity"
+  default     = false
+}
+
+variable "test_instance_type" {
+  type        = string
+  description = "Instance type for the optional test instance"
+  default     = "t3.micro"
+}
 

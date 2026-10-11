@@ -1,6 +1,6 @@
 resource "aws_vpc" "this" {
-  cidr_block          = var.vpc_cidr
-  enable_dns_support  = true
+  cidr_block           = var.vpc_cidr
+  enable_dns_support   = true
   enable_dns_hostnames = true
 
   tags = {
@@ -22,7 +22,7 @@ resource "aws_subnet" "public" {
 
   vpc_id                  = aws_vpc.this.id
   cidr_block              = var.public_subnet_cidrs[count.index]
-  availability_zone      = var.azs[count.index]
+  availability_zone       = var.azs[count.index]
   map_public_ip_on_launch = true
 
   tags = {
@@ -36,7 +36,7 @@ resource "aws_subnet" "private" {
 
   vpc_id                  = aws_vpc.this.id
   cidr_block              = var.private_subnet_cidrs[count.index]
-  availability_zone      = var.azs[count.index]
+  availability_zone       = var.azs[count.index]
   map_public_ip_on_launch = false
 
   tags = {
@@ -93,7 +93,7 @@ resource "aws_vpc_endpoint" "s3" {
 
   service_name      = "com.amazonaws.${var.region}.s3"
   vpc_endpoint_type = "Gateway"
-  route_table_ids  = [aws_route_table.private.id]
+  route_table_ids   = [aws_route_table.private.id]
 
   tags = {
     Name = "${var.name}-s3-endpoint"

@@ -69,7 +69,7 @@ resource "aws_security_group" "db" {
 
   vpc_id = var.vpc_id
 
-  ingress  {
+  ingress {
     description     = "db port from app tier"
     from_port       = var.db_port
     to_port         = var.db_port
